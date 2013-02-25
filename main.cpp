@@ -24,6 +24,6 @@ int main(int argc, char *argv[])
 	clock_t t1=clock();
 	trad.parcours("sortie.txt");
     cout << (clock()-t1)/((float)CLOCKS_PER_SEC) <<" sec."<<endl;*/
-	
+
     return app.exec();
 }
