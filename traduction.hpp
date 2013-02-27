@@ -6,27 +6,47 @@
 #include <string.h>
 #include <sstream>
 #include <fstream>
-#include <QObject>
+#include <QThread>
+#include <QDebug>
+#include <QMutex>
+
 using namespace std;
 
-class Traduction : public QObject
+typedef enum
+{
+    translate_all,
+    translate_files
+} callMethod_t;
+
+class Traduction : public QThread
 {
     Q_OBJECT
 
 private:
 
 	map<string,string> _traducteur;
+    callMethod_t _type;
+    unsigned int _method;
+    QString _param1;
+    QString _param2;
+    using QThread::start;
+    QMutex _mutex;
 
 public:
     Traduction();
     void init_trad();
-    void translateFiles(const char* fileNameIn,const char * fileNameOut);
-    string translate(const char *inChaine, int mode,const  char * out_file_name = NULL);
-    string translate_all_ORC(const char *inChaine,const char * out_file_name = NULL);
+    inline void translateFiles(const char* fileNameIn,const char * fileNameOut);
+    inline void translate(const char *inChaine, int mode,const  char * out_file_name = NULL);
+    inline void translate_all_ORC(const char *inChaine,const char * out_file_name = NULL);
     void reverser(char s[]);
     bool isChainFormated(const char * s);
+    void run();
+    void start(callMethod_t type,const char * inParam1,const char * inParam2= NULL);
 
 signals:
     void consoleChanged(QString s);
+    void proteineDecrypted(QString prot);
+    void startTimer();
+    void stopTimer();
 };
 	

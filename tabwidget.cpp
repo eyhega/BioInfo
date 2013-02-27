@@ -7,6 +7,13 @@ TabWidget::TabWidget(QWidget *parent) :
 {
     ui->setupUi(this);
     QObject::connect(&_traductor,SIGNAL(consoleChanged(QString)),ui->console,SLOT(appendHtml(QString)));
+    QObject::connect(&_traductor,SIGNAL(proteineDecrypted(QString)),ui->plainTextEdit,SLOT(appendHtml(QString)));
+    QObject::connect(&_reverseTraductor,SIGNAL(chainDecrypted(QString)),ui->plainTextEdit,SLOT(appendHtml(QString)));
+    QObject::connect(&_traductor,SIGNAL(startTimer()),this,SLOT(timerLaunched()));
+    QObject::connect(&_traductor,SIGNAL(stopTimer()),this,SLOT(timerStoped()));
+    QObject::connect(&_reverseTraductor,SIGNAL(startTimer()),this,SLOT(timerLaunched()));
+    QObject::connect(&_reverseTraductor,SIGNAL(stopTimer()),this,SLOT(timerStoped()));
+    _notepad=false;
 }
 
 TabWidget::~TabWidget()
@@ -34,21 +41,30 @@ void TabWidget::on_pushButton_clicked()
     {
         if(_traductor.isChainFormated(ui->lineEdit->text().toStdString().c_str()))
         {
-            string res;
             if(ui->groupBox_fileDialog->isChecked() && !ui->lineEdit_2->text().isEmpty())
             {
-                launchTimer();
-                res=_traductor.translate_all_ORC(ui->lineEdit->text().toStdString().c_str(),ui->lineEdit_2->text().toStdString().c_str());
-                stopTimer();
-                openNotepad(ui->lineEdit_2->text());
+                if(ui->radioButtonTraduction->isChecked())
+                {
+                    _traductor.start(translate_all,ui->lineEdit->text().toStdString().c_str(),ui->lineEdit_2->text().toStdString().c_str());
+                }
+                else
+                {
+                     _reverseTraductor.start(reverseTranslateM,ui->lineEdit->text().toStdString().c_str(),ui->lineEdit_2->text().toStdString().c_str());
+                }
+                _notepad = true;
+                _fileName=ui->lineEdit_2->text();
             }
             else
             {
-                launchTimer();
-                res=_traductor.translate_all_ORC(ui->lineEdit->text().toStdString().c_str(),NULL);
-                stopTimer();
+                if(ui->radioButtonTraduction->isChecked())
+                {
+                    _traductor.start(translate_all,ui->lineEdit->text().toStdString().c_str());
+                }
+                else
+                {
+                    _reverseTraductor.start(reverseTranslateM,ui->lineEdit->text().toStdString().c_str());
+                }
             }
-            ui->plainTextEdit->appendHtml(QString(res.c_str()));
         }
     }
 }
@@ -92,14 +108,19 @@ void TabWidget::on_pushButton_5_clicked()
     ui->lineEdit_4->setText(callFileDialog("Fichier sortie"));
 }
 
-void TabWidget::launchTimer()
+void TabWidget::timerLaunched()
 {
     _time.restart();
 }
 
-void TabWidget::stopTimer()
+void TabWidget::timerStoped()
 {
     ui->lcdNumber->display((float)_time.elapsed()/1000);
+    if(_notepad)
+    {
+        openNotepad(_fileName);
+        _notepad=false;
+    }
 }
 
 //Traduire batch clicked
@@ -107,8 +128,17 @@ void TabWidget::on_pushButton_6_clicked()
 {
     if(!ui->lineEdit_3->text().isEmpty() && !ui->lineEdit_4->text().isEmpty())
     {
-        launchTimer();
-        _traductor.translateFiles(ui->lineEdit_3->text().toStdString().c_str(),ui->lineEdit_4->text().toStdString().c_str());
-        stopTimer();
+        if(ui->radioButtonTraduction->isChecked())
+            _traductor.start(translate_files,ui->lineEdit_3->text().toStdString().c_str(),ui->lineEdit_4->text().toStdString().c_str());
+        else
+            _reverseTraductor.start(loadFileAndTranslate,ui->lineEdit_3->text().toStdString().c_str(),ui->lineEdit_4->text().toStdString().c_str());
+
+        _notepad=true;
+       _fileName=ui->lineEdit_4->text().toStdString().c_str();
     }
+}
+
+void TabWidget::on_pushButton_reset_clicked()
+{
+
 }

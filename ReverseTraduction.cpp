@@ -2,7 +2,7 @@
 
 using namespace std;
 
-ReverseTraduction::ReverseTraduction()
+ReverseTraduction::ReverseTraduction() : QThread()
 {
 	loadReverseTrad();
 }
@@ -85,11 +85,11 @@ void ReverseTraduction::loadReverseTrad()
 
 }
 
-void ReverseTraduction::loadFicAndTranslate(string inFileName)
+void ReverseTraduction::loadFicAndTranslate(const char *inFileName)
 {
-	ifstream fic(inFileName.c_str(),ios::in);
-	string chaine;
-	if(fic)
+    ifstream fic;
+    string chaine;
+    if(fic)
 	{
 		getline(fic,chaine);
 		reverseTranslate(chaine.c_str());
@@ -131,14 +131,14 @@ void ReverseTraduction::reverseTranslate(const char * aa)
 		
 		_resultChains.push_back(tmpVect);
 	}
-	
-	
 }
 
-void ReverseTraduction::parcours(string inFileName)
+void ReverseTraduction::parcours(const char * inFileName)
 {
-	ofstream fic(inFileName.c_str(),ios::out | ios::trunc);
-	if(fic)
+    QString ss;
+    ofstream fic(inFileName,ios::out | ios::trunc);
+
+    if(fic || (!fic && !inFileName))
 	{
 		for(int i=0;i<_resultChains.size();++i)
 			_tableCount.push_back(0);
@@ -147,12 +147,25 @@ void ReverseTraduction::parcours(string inFileName)
 		{
 			for(int i=0;i<_resultChains.size();i++)
 			{
-				fic <<_resultChains[i][_tableCount[i]];
+                if(fic)
+                    fic <<_resultChains[i][_tableCount[i]];
+                else
+                    ss.append((_resultChains[i][_tableCount[i]]).c_str());
 			}
-			fic <<'*'<< endl;
+            if(fic)
+                fic <<'*'<< endl;
+            else
+            {
+                ss.append("*<BR/>");
+                emit chainDecrypted(ss);
+                ss.clear();
+            }
+
 		}while(!incremente());
 		
-		fic.close();
+        if(fic)
+            fic.close();
+
 	}
 	else
 		cout <<"Probleme d'ouverture du fichier"<<endl;
@@ -193,4 +206,28 @@ void ReverseTraduction::displayChains()
 	}
 	
 	cout << endl << "Nb Chains: "<< nbPoss<<endl;
+}
+
+ void ReverseTraduction::start(ReverseMethod_t type,const char * param1,const char * fileName)
+ {
+     _type=type;
+     _param1=QString(param1);
+     _fileName=!fileName? QString() : QString(fileName);
+     start();
+ }
+
+void ReverseTraduction::run()
+{
+    emit startTimer();
+    switch(_type)
+    {
+    case reverseTranslateM: reverseTranslate(_param1.toStdString().c_str());break;
+    case loadFileAndTranslate: loadFicAndTranslate(_param1.toStdString().c_str());break;
+    }
+
+    if(_fileName.isEmpty())
+        parcours();
+    else
+        parcours(_fileName.toStdString().c_str());
+    emit stopTimer();
 }

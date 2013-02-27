@@ -38,6 +38,12 @@ private slots:
 
     void on_pushButton_6_clicked();
 
+    void on_pushButton_reset_clicked();
+
+public slots:
+    void timerLaunched();
+    void timerStoped();
+
 private:
     Ui::TabWidget *ui;
     Traduction _traductor;
@@ -45,12 +51,12 @@ private:
     QString _fileName;
     QProcess _process;
     QTime _time;
+    bool _notepad;
 
     //methods
     void openNotepad(QString fileName);
     QString callFileDialog(QString title);
-    void launchTimer();
-    void stopTimer();
+
 };
 
 #endif // TABWIDGET_H

@@ -1,7 +1,7 @@
 #include "traduction.hpp"
 using namespace std;
 
-Traduction::Traduction()
+Traduction::Traduction() : QThread()
 {
     init_trad();
 }
@@ -21,73 +21,73 @@ void Traduction::reverser(char s[])
 
 void Traduction::init_trad()
 {
-	_traducteur.insert(pair<string,string>("TTT","PHE"));
-	_traducteur.insert(pair<string,string>("TTC","PHE"));
-	_traducteur.insert(pair<string,string>("TTA","LEU"));
-	_traducteur.insert(pair<string,string>("TTG","LEU"));
-	_traducteur.insert(pair<string,string>("TCT","SER"));
-	_traducteur.insert(pair<string,string>("TCC","SER"));
-	_traducteur.insert(pair<string,string>("TCA","SER"));
-	_traducteur.insert(pair<string,string>("TCG","SER"));
-	_traducteur.insert(pair<string,string>("TAT","TYR"));
-	_traducteur.insert(pair<string,string>("TAC","TYR"));
-	_traducteur.insert(pair<string,string>("TAA","STOP"));
-	_traducteur.insert(pair<string,string>("TAG","STOP"));
-	_traducteur.insert(pair<string,string>("TGT","CYS"));
-	_traducteur.insert(pair<string,string>("TGC","CYS"));
-	_traducteur.insert(pair<string,string>("TGA","STOP"));
-	_traducteur.insert(pair<string,string>("TGG","TRP"));
-	_traducteur.insert(pair<string,string>("CTT","LEU"));
-	_traducteur.insert(pair<string,string>("CTC","LEU"));
-	_traducteur.insert(pair<string,string>("CTA","LEU"));
-	_traducteur.insert(pair<string,string>("CTG","LEU"));
-	_traducteur.insert(pair<string,string>("CCT","PRO"));
-	_traducteur.insert(pair<string,string>("CCC","PRO"));
-	_traducteur.insert(pair<string,string>("CCA","PRO"));
-	_traducteur.insert(pair<string,string>("CCG","PRO"));
-	_traducteur.insert(pair<string,string>("CAT","HIS"));
-	_traducteur.insert(pair<string,string>("CAC","HIS"));
-	_traducteur.insert(pair<string,string>("CAA","GLN"));
-	_traducteur.insert(pair<string,string>("CAG","GLN"));
-	_traducteur.insert(pair<string,string>("CGT","ARG"));
-	_traducteur.insert(pair<string,string>("CGC","ARG"));
-	_traducteur.insert(pair<string,string>("CGA","ARG"));
-	_traducteur.insert(pair<string,string>("CGG","ARG"));
-	_traducteur.insert(pair<string,string>("ATT","ILE"));
-	_traducteur.insert(pair<string,string>("ATC","ILE"));
-	_traducteur.insert(pair<string,string>("ATA","ILE"));
-	_traducteur.insert(pair<string,string>("ATG","MET"));
-	_traducteur.insert(pair<string,string>("ACT","THR"));
-	_traducteur.insert(pair<string,string>("ACC","THR"));
-	_traducteur.insert(pair<string,string>("ACA","THR"));
-	_traducteur.insert(pair<string,string>("ACG","THR"));
-	_traducteur.insert(pair<string,string>("AAT","ASN"));
-	_traducteur.insert(pair<string,string>("AAC","ASN"));
-	_traducteur.insert(pair<string,string>("AAA","LYS"));
-	_traducteur.insert(pair<string,string>("AAG","LYS"));
-	_traducteur.insert(pair<string,string>("AGT","SER"));
-	_traducteur.insert(pair<string,string>("AGC","SER"));
-	_traducteur.insert(pair<string,string>("AGA","ARG"));
-	_traducteur.insert(pair<string,string>("AGG","ARG"));
-	_traducteur.insert(pair<string,string>("GTT","VAL"));
-	_traducteur.insert(pair<string,string>("GTC","VAL"));
-	_traducteur.insert(pair<string,string>("GTA","VAL"));
-	_traducteur.insert(pair<string,string>("GTG","VAL"));
-	_traducteur.insert(pair<string,string>("GCT","ALA"));
-	_traducteur.insert(pair<string,string>("GCC","ALA"));
-	_traducteur.insert(pair<string,string>("GCA","ALA"));
-	_traducteur.insert(pair<string,string>("GCG","ALA"));
-	_traducteur.insert(pair<string,string>("GAT","ASP"));
-	_traducteur.insert(pair<string,string>("GAC","ASP"));
-	_traducteur.insert(pair<string,string>("GAA","GLU"));
-	_traducteur.insert(pair<string,string>("GAG","GLU"));
-	_traducteur.insert(pair<string,string>("GGT","GLY"));
-	_traducteur.insert(pair<string,string>("GGC","GLY"));
-	_traducteur.insert(pair<string,string>("GGA","GLY"));
-	_traducteur.insert(pair<string,string>("GGG","GLY"));
+    _traducteur.insert(pair<string,string>("TTT","PHE"));
+    _traducteur.insert(pair<string,string>("TTC","PHE"));
+    _traducteur.insert(pair<string,string>("TTA","LEU"));
+    _traducteur.insert(pair<string,string>("TTG","LEU"));
+    _traducteur.insert(pair<string,string>("TCT","SER"));
+    _traducteur.insert(pair<string,string>("TCC","SER"));
+    _traducteur.insert(pair<string,string>("TCA","SER"));
+    _traducteur.insert(pair<string,string>("TCG","SER"));
+    _traducteur.insert(pair<string,string>("TAT","TYR"));
+    _traducteur.insert(pair<string,string>("TAC","TYR"));
+    _traducteur.insert(pair<string,string>("TAA","STOP"));
+    _traducteur.insert(pair<string,string>("TAG","STOP"));
+    _traducteur.insert(pair<string,string>("TGT","CYS"));
+    _traducteur.insert(pair<string,string>("TGC","CYS"));
+    _traducteur.insert(pair<string,string>("TGA","STOP"));
+    _traducteur.insert(pair<string,string>("TGG","TRP"));
+    _traducteur.insert(pair<string,string>("CTT","LEU"));
+    _traducteur.insert(pair<string,string>("CTC","LEU"));
+    _traducteur.insert(pair<string,string>("CTA","LEU"));
+    _traducteur.insert(pair<string,string>("CTG","LEU"));
+    _traducteur.insert(pair<string,string>("CCT","PRO"));
+    _traducteur.insert(pair<string,string>("CCC","PRO"));
+    _traducteur.insert(pair<string,string>("CCA","PRO"));
+    _traducteur.insert(pair<string,string>("CCG","PRO"));
+    _traducteur.insert(pair<string,string>("CAT","HIS"));
+    _traducteur.insert(pair<string,string>("CAC","HIS"));
+    _traducteur.insert(pair<string,string>("CAA","GLN"));
+    _traducteur.insert(pair<string,string>("CAG","GLN"));
+    _traducteur.insert(pair<string,string>("CGT","ARG"));
+    _traducteur.insert(pair<string,string>("CGC","ARG"));
+    _traducteur.insert(pair<string,string>("CGA","ARG"));
+    _traducteur.insert(pair<string,string>("CGG","ARG"));
+    _traducteur.insert(pair<string,string>("ATT","ILE"));
+    _traducteur.insert(pair<string,string>("ATC","ILE"));
+    _traducteur.insert(pair<string,string>("ATA","ILE"));
+    _traducteur.insert(pair<string,string>("ATG","MET"));
+    _traducteur.insert(pair<string,string>("ACT","THR"));
+    _traducteur.insert(pair<string,string>("ACC","THR"));
+    _traducteur.insert(pair<string,string>("ACA","THR"));
+    _traducteur.insert(pair<string,string>("ACG","THR"));
+    _traducteur.insert(pair<string,string>("AAT","ASN"));
+    _traducteur.insert(pair<string,string>("AAC","ASN"));
+    _traducteur.insert(pair<string,string>("AAA","LYS"));
+    _traducteur.insert(pair<string,string>("AAG","LYS"));
+    _traducteur.insert(pair<string,string>("AGT","SER"));
+    _traducteur.insert(pair<string,string>("AGC","SER"));
+    _traducteur.insert(pair<string,string>("AGA","ARG"));
+    _traducteur.insert(pair<string,string>("AGG","ARG"));
+    _traducteur.insert(pair<string,string>("GTT","VAL"));
+    _traducteur.insert(pair<string,string>("GTC","VAL"));
+    _traducteur.insert(pair<string,string>("GTA","VAL"));
+    _traducteur.insert(pair<string,string>("GTG","VAL"));
+    _traducteur.insert(pair<string,string>("GCT","ALA"));
+    _traducteur.insert(pair<string,string>("GCC","ALA"));
+    _traducteur.insert(pair<string,string>("GCA","ALA"));
+    _traducteur.insert(pair<string,string>("GCG","ALA"));
+    _traducteur.insert(pair<string,string>("GAT","ASP"));
+    _traducteur.insert(pair<string,string>("GAC","ASP"));
+    _traducteur.insert(pair<string,string>("GAA","GLU"));
+    _traducteur.insert(pair<string,string>("GAG","GLU"));
+    _traducteur.insert(pair<string,string>("GGT","GLY"));
+    _traducteur.insert(pair<string,string>("GGC","GLY"));
+    _traducteur.insert(pair<string,string>("GGA","GLY"));
+    _traducteur.insert(pair<string,string>("GGG","GLY"));
 }
 
-string Traduction::translate(const char * inChaine, int mode,const char *out_file_name)
+void Traduction::translate(const char * inChaine, int mode,const char *out_file_name)
 {
     stringstream ss,stream;
     FILE * fichier=NULL;
@@ -106,7 +106,7 @@ string Traduction::translate(const char * inChaine, int mode,const char *out_fil
         fichier=fopen(out_file_name,"a");
 
 	reverse?index=mode-3:index=mode;
-	i=index;
+    i=index;
 	while((inChaine[i]!='*')&&(inChaine[i+1]!='*')&&(inChaine[i+2]!='*'))
 	{
 		strncpy(temp,inChaine+i,3);
@@ -114,8 +114,9 @@ string Traduction::translate(const char * inChaine, int mode,const char *out_fil
 		if(reverse)
 			reverser(temp);
 		codon=temp;
+
 		it=_traducteur.find(codon);
-		proteine=it->second;
+        proteine=it->second;
         stream << proteine << ' ';
 
         cout<<proteine<<' ';
@@ -152,20 +153,19 @@ string Traduction::translate(const char * inChaine, int mode,const char *out_fil
 	cout << "Partie codante :"<<(double)nb_codons_total_codant/(double)(i/3)<<endl;
     if(fichier)
         fclose(fichier);
+    else
+        emit proteineDecrypted(QString(ss.str().c_str()));
 
-    emit consoleChanged(QString(ss.str().c_str()));
-    return ss.str();
+    emit consoleChanged(QString(stream.str().c_str()));
+
 }
 
-string Traduction::translate_all_ORC(const char * inChaine, const char *out_file_name)
+void Traduction::translate_all_ORC(const char * inChaine, const char *out_file_name)
 {
-    stringstream ss;
 	for(int i=0;i<6;i++)
 	{
-        ss << translate(inChaine,i,out_file_name) << "<BR/>";
+       translate(inChaine,i,out_file_name);
 	}
-
-    return ss.str();
 }
 
 
@@ -193,7 +193,7 @@ void Traduction::translateFiles(const char* fileNameIn,const char * fileNameOut)
             tmp.append("Traitement ligne ").append(i).append("...<BR/>");
             emit consoleChanged(tmp);
             tmp.clear();
-            res=translate_all_ORC(chaine.c_str(),fileNameOut);
+            translate_all_ORC(chaine.c_str(),fileNameOut);
             out=fopen(fileNameOut,"a");
             if(out)
             {
@@ -208,4 +208,24 @@ void Traduction::translateFiles(const char* fileNameIn,const char * fileNameOut)
        emit consoleChanged("Fermeture des fichiers...<BR/>");
     }
 }
-	
+
+void Traduction::start(callMethod_t type,const char * inParam1,const char * inParam2)
+{
+    _mutex.lock();
+    _type=type;
+    _param1=QString(inParam1);
+    _param2=QString(inParam2);
+    _mutex.unlock();
+    start(QThread::HighestPriority);
+}
+
+void Traduction::run()
+{
+    emit startTimer();
+    switch(_type)
+    {
+    case translate_all:  translate_all_ORC(_param1.toStdString().c_str(),_param2.toStdString().c_str()); break;
+    case translate_files:translateFiles(_param1.toStdString().c_str(),_param2.toStdString().c_str());break;
+    }
+    emit stopTimer();
+}
