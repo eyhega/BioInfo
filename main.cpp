@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
     TabWidget w;
+    w.setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     w.show();
 
 	

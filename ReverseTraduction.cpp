@@ -87,7 +87,7 @@ void ReverseTraduction::loadReverseTrad()
 
 void ReverseTraduction::loadFicAndTranslate(const char *inFileName)
 {
-    ifstream fic;
+    ifstream fic(inFileName,ios::in);
     string chaine;
     if(fic)
 	{
@@ -102,6 +102,9 @@ void ReverseTraduction::reverseTranslate(const char * aa)
 {
 	int current=0;
 	char c_tmp[6];
+
+    _resultChains.clear();
+    _tableCount.clear();
 	
 	while(aa[current] != '*')
 	{
@@ -137,12 +140,14 @@ void ReverseTraduction::parcours(const char * inFileName)
 {
     QString ss;
     ofstream fic(inFileName,ios::out | ios::trunc);
+    unsigned long counter=1;
 
     if(fic || (!fic && !inFileName))
 	{
+        emit consoleChanged("Ouverture des fichiers<BR/>");
 		for(int i=0;i<_resultChains.size();++i)
 			_tableCount.push_back(0);
-			
+        emit consoleChanged("Parcours en cours...<BR/>");
 		do
 		{
 			for(int i=0;i<_resultChains.size();i++)
@@ -163,8 +168,12 @@ void ReverseTraduction::parcours(const char * inFileName)
 
 		}while(!incremente());
 		
+        emit consoleChanged("Fin de parcours");
         if(fic)
+        {
             fic.close();
+            emit consoleChanged("Fermeture des fichiers<BR/>");
+        }
 
 	}
 	else
@@ -213,7 +222,7 @@ void ReverseTraduction::displayChains()
      _type=type;
      _param1=QString(param1);
      _fileName=!fileName? QString() : QString(fileName);
-     start();
+     start(QThread::HighestPriority);
  }
 
 void ReverseTraduction::run()

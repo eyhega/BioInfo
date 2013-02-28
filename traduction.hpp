@@ -7,8 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <QThread>
-#include <QDebug>
-#include <QMutex>
+#include <QStringList>
 
 using namespace std;
 
@@ -30,7 +29,6 @@ private:
     QString _param1;
     QString _param2;
     using QThread::start;
-    QMutex _mutex;
 
 public:
     Traduction();
@@ -40,6 +38,7 @@ public:
     inline void translate_all_ORC(const char *inChaine,const char * out_file_name = NULL);
     void reverser(char s[]);
     bool isChainFormated(const char * s);
+    QString prepareFasta(QString inFileName);
     void run();
     void start(callMethod_t type,const char * inParam1,const char * inParam2= NULL);
 

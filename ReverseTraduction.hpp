@@ -48,6 +48,7 @@ class ReverseTraduction : public QThread
 
 signals:
         void chainDecrypted(QString s);
+        void consoleChanged(QString s);
         void startTimer();
         void stopTimer();
 

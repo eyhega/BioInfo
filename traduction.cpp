@@ -147,10 +147,10 @@ void Traduction::translate(const char * inChaine, int mode,const char *out_file_
     ss << "*";
 
 
-    stream << "<BR/>" << "Partie codante :"<<(double)nb_codons_total_codant/(double)(i/3)<<"<BR/>";
+    stream << "<BR/>" << "Partie codante :"<<((double)nb_codons_total_codant/(double)(i/3))*100<<"%<BR/>";
 
 	cout<<endl;
-	cout << "Partie codante :"<<(double)nb_codons_total_codant/(double)(i/3)<<endl;
+    cout << "Partie codante (%) :"<<((double)nb_codons_total_codant/(double)(i/3))*100<<endl;
     if(fichier)
         fclose(fichier);
     else
@@ -183,9 +183,10 @@ void Traduction::translateFiles(const char* fileNameIn,const char * fileNameOut)
     int i=1;
     ifstream fic(fileNameIn,ios::in);
     QString tmp;
+    QStringList list= _param1.split(".");
+    bool fasta= list.last()[0] == 'f';
 
-
-    if(fic)
+    if(fic && !fasta)
     {
         emit consoleChanged("Ouverture des fichiers...<BR/>");
         while(getline(fic,chaine))
@@ -207,20 +208,47 @@ void Traduction::translateFiles(const char* fileNameIn,const char * fileNameOut)
         }
        emit consoleChanged("Fermeture des fichiers...<BR/>");
     }
+    else if(fasta)
+    {
+        tmp=prepareFasta(QString(fileNameIn));
+        translate_all_ORC(tmp.toStdString().c_str(),fileNameOut);
+    }
+}
+
+QString Traduction::prepareFasta(QString inFileName)
+{
+    ifstream file(inFileName.toStdString().c_str(),ios::in);
+    QString chain;
+    string tmp;
+    if(file)
+    {
+        getline(file,tmp);
+        if(tmp.c_str()[0] != '>')
+            chain.append(tmp.c_str());
+        while(getline(file,tmp) && tmp.c_str()[0] != '>')
+            chain.append(tmp.c_str());
+
+        chain.append("*");
+        file.close();
+    }
+    else
+        emit consoleChanged("Erreur lors de l'ouverture du fichier");
+
+    return chain;
 }
 
 void Traduction::start(callMethod_t type,const char * inParam1,const char * inParam2)
 {
-    _mutex.lock();
     _type=type;
     _param1=QString(inParam1);
     _param2=QString(inParam2);
-    _mutex.unlock();
     start(QThread::HighestPriority);
+
 }
 
 void Traduction::run()
 {
+
     emit startTimer();
     switch(_type)
     {

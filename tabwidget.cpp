@@ -13,6 +13,7 @@ TabWidget::TabWidget(QWidget *parent) :
     QObject::connect(&_traductor,SIGNAL(stopTimer()),this,SLOT(timerStoped()));
     QObject::connect(&_reverseTraductor,SIGNAL(startTimer()),this,SLOT(timerLaunched()));
     QObject::connect(&_reverseTraductor,SIGNAL(stopTimer()),this,SLOT(timerStoped()));
+    QObject::connect(&_reverseTraductor,SIGNAL(consoleChanged(QString)),ui->console,SLOT(appendHtml(QString)));
     _notepad=false;
 }
 
@@ -35,6 +36,7 @@ void TabWidget::openNotepad(QString fileName)
     }
 }
 
+//clique traduire mode manuel
 void TabWidget::on_pushButton_clicked()
 {
     if(!ui->lineEdit->text().isEmpty())
@@ -75,10 +77,17 @@ void TabWidget::on_pushButton_2_clicked()
     if(ui->console->isHidden())
     {
         ui->console->show();
+        setMinimumSize(this->width(),this->height()+ui->console->height());
+        setMaximumSize(this->width(),this->height()+ui->console->height());
+
+
     }
     else
     {
         ui->console->hide();
+        setMinimumSize(this->width(),this->height()-ui->console->height());
+        setMaximumSize(this->width(),this->height()-ui->console->height());
+
     }
 }
 
@@ -94,7 +103,7 @@ QString TabWidget::callFileDialog(QString title)
     return QFileDialog::getOpenFileName(this,
                                         tr(title.toUtf8().constData()),
                                         "C:\\",
-                                        tr("Fichier Texte (*.txt *.dat)"));
+                                        tr("Fichier Texte ou FASTA (*.txt *.dat *.fasta *.fas *.fa)"));
 }
 
 //Click sur parcourir batch entrée
@@ -140,5 +149,11 @@ void TabWidget::on_pushButton_6_clicked()
 
 void TabWidget::on_pushButton_reset_clicked()
 {
-
+    ui->plainTextEdit->clear();
+    ui->console->clear();
+    ui->lcdNumber->display(0);
+    ui->lineEdit->clear();
+    ui->lineEdit_2->clear();
+    ui->lineEdit_3->clear();
+    ui->lineEdit_4->clear();
 }
