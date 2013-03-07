@@ -7,7 +7,7 @@
 #include <sstream>
 #include <fstream>
 #include <QThread>
-#include <QStringList>
+#include "filemanager.h"
 
 using namespace std;
 
@@ -34,11 +34,10 @@ public:
     Traduction();
     void init_trad();
     inline void translateFiles(const char* fileNameIn,const char * fileNameOut);
-    inline void translate(const char *inChaine, int mode,const  char * out_file_name = NULL);
-    inline void translate_all_ORC(const char *inChaine,const char * out_file_name = NULL);
+    inline void translate(const char *inChaine, int mode,FileManager *file = NULL);
+    inline void translate_all_ORC(const char *inChaine,FileManager * file = NULL);
     void reverser(char s[]);
     bool isChainFormated(const char * s);
-    QString prepareFasta(QString inFileName);
     void run();
     void start(callMethod_t type,const char * inParam1,const char * inParam2= NULL);
 

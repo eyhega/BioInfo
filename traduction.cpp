@@ -87,10 +87,9 @@ void Traduction::init_trad()
     _traducteur.insert(pair<string,string>("GGG","GLY"));
 }
 
-void Traduction::translate(const char * inChaine, int mode,const char *out_file_name)
+void Traduction::translate(const char * inChaine, int mode,FileManager * file)
 {
     stringstream ss,stream;
-    FILE * fichier=NULL;
 	bool reverse=(mode>2);
 	string codon;
 	char  temp[4];
@@ -101,9 +100,6 @@ void Traduction::translate(const char * inChaine, int mode,const char *out_file_
 	int index;
 	int i;
 	map<string,string>::iterator it;
-
-    if(out_file_name)
-        fichier=fopen(out_file_name,"a");
 
 	reverse?index=mode-3:index=mode;
     i=index;
@@ -120,8 +116,7 @@ void Traduction::translate(const char * inChaine, int mode,const char *out_file_
         stream << proteine << ' ';
 
         cout<<proteine<<' ';
-        if(fichier)
-            fprintf(fichier,"%s ",proteine.c_str());
+
         ss << proteine << " ";
 		//calcul du pourcentage codant
 		if(proteine=="MET")
@@ -141,18 +136,18 @@ void Traduction::translate(const char * inChaine, int mode,const char *out_file_
 			
 		}
 		i+=3;
-	}
-    if(fichier)
-        fprintf(fichier, "*\n");
+    }
     ss << "*";
-
 
     stream << "<BR/>" << "Partie codante :"<<((double)nb_codons_total_codant/(double)(i/3))*100<<"%<BR/>";
 
 	cout<<endl;
     cout << "Partie codante (%) :"<<((double)nb_codons_total_codant/(double)(i/3))*100<<endl;
-    if(fichier)
-        fclose(fichier);
+    if(file)
+    {
+        QString toWrite(ss.str().c_str());
+        file->write(toWrite);
+    }
     else
         emit proteineDecrypted(QString(ss.str().c_str()));
 
@@ -160,11 +155,11 @@ void Traduction::translate(const char * inChaine, int mode,const char *out_file_
 
 }
 
-void Traduction::translate_all_ORC(const char * inChaine, const char *out_file_name)
+void Traduction::translate_all_ORC(const char * inChaine, FileManager *file)
 {
 	for(int i=0;i<6;i++)
 	{
-       translate(inChaine,i,out_file_name);
+       translate(inChaine,i,file);
 	}
 }
 
@@ -178,63 +173,26 @@ bool Traduction::isChainFormated(const char *s)
 
 void Traduction::translateFiles(const char* fileNameIn,const char * fileNameOut)
 {
-    string res,chaine;
-    FILE * out;
     int i=1;
-    ifstream fic(fileNameIn,ios::in);
     QString tmp;
-    QStringList list= _param1.split(".");
-    bool fasta= list.last()[0] == 'f';
+    QString nameIn(fileNameIn),nameOut(fileNameOut),fileChain;
+    FileManager file(nameIn,nameOut);
 
-    if(fic && !fasta)
+    emit consoleChanged("Ouverture des fichiers...<BR/>");
+    fileChain=file.read();
+    while(fileChain != QString())
     {
-        emit consoleChanged("Ouverture des fichiers...<BR/>");
-        while(getline(fic,chaine))
-        {
-            tmp.append("Traitement ligne ").append(i).append("...<BR/>");
-            emit consoleChanged(tmp);
-            tmp.clear();
-            translate_all_ORC(chaine.c_str(),fileNameOut);
-            out=fopen(fileNameOut,"a");
-            if(out)
-            {
-                fputs("********************************\n",out);
-                fclose(out);
-            }
-            tmp.append("Fin traitement ligne ").append(i).append("...<BR/><BR/>");
-            emit consoleChanged(tmp);
-            tmp.clear();
-            ++i;
-        }
-       emit consoleChanged("Fermeture des fichiers...<BR/>");
+        tmp.append("Traitement ligne ").append(i).append("...<BR/>");
+        emit consoleChanged(tmp);
+        tmp.clear();
+        translate_all_ORC(fileChain.toStdString().c_str(),&file);
+        tmp.append("Fin traitement ligne ").append(i).append("...<BR/><BR/>");
+        emit consoleChanged(tmp);
+        tmp.clear();
+        ++i;
+        fileChain=file.read();
     }
-    else if(fasta)
-    {
-        tmp=prepareFasta(QString(fileNameIn));
-        translate_all_ORC(tmp.toStdString().c_str(),fileNameOut);
-    }
-}
-
-QString Traduction::prepareFasta(QString inFileName)
-{
-    ifstream file(inFileName.toStdString().c_str(),ios::in);
-    QString chain;
-    string tmp;
-    if(file)
-    {
-        getline(file,tmp);
-        if(tmp.c_str()[0] != '>')
-            chain.append(tmp.c_str());
-        while(getline(file,tmp) && tmp.c_str()[0] != '>')
-            chain.append(tmp.c_str());
-
-        chain.append("*");
-        file.close();
-    }
-    else
-        emit consoleChanged("Erreur lors de l'ouverture du fichier");
-
-    return chain;
+   emit consoleChanged("Fermeture des fichiers...<BR/>");
 }
 
 void Traduction::start(callMethod_t type,const char * inParam1,const char * inParam2)
@@ -249,10 +207,11 @@ void Traduction::start(callMethod_t type,const char * inParam1,const char * inPa
 void Traduction::run()
 {
 
+    FileManager * file=(_param2 == QString())?NULL:new FileManager(_param2);
     emit startTimer();
     switch(_type)
     {
-    case translate_all:  translate_all_ORC(_param1.toStdString().c_str(),_param2.toStdString().c_str()); break;
+    case translate_all:  translate_all_ORC(_param1.toStdString().c_str(),file); break;
     case translate_files:translateFiles(_param1.toStdString().c_str(),_param2.toStdString().c_str());break;
     }
     emit stopTimer();

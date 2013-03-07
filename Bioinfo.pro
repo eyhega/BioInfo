@@ -20,13 +20,21 @@ SOURCES += \
     ReverseTraduction.cpp \
     main.cpp \
     Generateur.cpp \
-    tabwidget.cpp
+    tabwidget.cpp \
+    basefile.cpp \
+    textfilemanager.cpp \
+    fastafilemanager.cpp \
+    filemanager.cpp
 
 HEADERS += \
     traduction.hpp \
     ReverseTraduction.hpp \
     Generateur.hpp \
-    tabwidget.h
+    tabwidget.h \
+    basefile.h \
+    textfilemanager.h \
+    fastafilemanager.h \
+    filemanager.h
 
 OTHER_FILES += \
     toto.txt \
