@@ -85,17 +85,14 @@ void ReverseTraduction::loadReverseTrad()
 
 }
 
-void ReverseTraduction::loadFicAndTranslate(const char *inFileName)
+void ReverseTraduction::loadFicAndTranslate(FileManager *file)
 {
-    ifstream fic(inFileName,ios::in);
-    string chaine;
-    if(fic)
-	{
-		getline(fic,chaine);
-		reverseTranslate(chaine.c_str());
-	}
-	else
-		cout << "Probleme lors l'ouverture du fichier" << endl;
+    QString chaine;
+    if(file)
+    {
+        chaine=file->read();
+        reverseTranslate(chaine.toStdString().c_str());
+    }
 }
 
 void ReverseTraduction::reverseTranslate(const char * aa)
@@ -136,48 +133,37 @@ void ReverseTraduction::reverseTranslate(const char * aa)
 	}
 }
 
-void ReverseTraduction::parcours(const char * inFileName)
+void ReverseTraduction::parcours(FileManager * file)
 {
     QString ss;
-    ofstream fic(inFileName,ios::out | ios::trunc);
     unsigned long counter=1;
 
-    if(fic || (!fic && !inFileName))
-	{
+    if(file)
         emit consoleChanged("Ouverture des fichiers<BR/>");
-		for(int i=0;i<_resultChains.size();++i)
-			_tableCount.push_back(0);
-        emit consoleChanged("Parcours en cours...<BR/>");
-		do
-		{
-			for(int i=0;i<_resultChains.size();i++)
-			{
-                if(fic)
-                    fic <<_resultChains[i][_tableCount[i]];
-                else
-                    ss.append((_resultChains[i][_tableCount[i]]).c_str());
-			}
-            if(fic)
-                fic <<'*'<< endl;
-            else
-            {
-                ss.append("*<BR/>");
-                emit chainDecrypted(ss);
-                ss.clear();
-            }
+    for(int i=0;i<_resultChains.size();++i)
+        _tableCount.push_back(0);
+    emit consoleChanged("Parcours en cours...<BR/>");
+    do
+    {
+        for(int i=0;i<_resultChains.size();i++)
+            ss.append((_resultChains[i][_tableCount[i]]).c_str());
 
-		}while(!incremente());
-		
-        emit consoleChanged("Fin de parcours");
-        if(fic)
+        ss.append("*");
+        if(file)
+            file->write(ss);
+        else
         {
-            fic.close();
-            emit consoleChanged("Fermeture des fichiers<BR/>");
+            ss.append("<BR/>");
+            emit chainDecrypted(ss);
         }
+        ss.clear();
 
-	}
-	else
-		cout <<"Probleme d'ouverture du fichier"<<endl;
+    }while(!incremente());
+
+    emit consoleChanged("Fin de parcours");
+    if(file)
+        emit consoleChanged("Fermeture des fichiers<BR/>");
+
 }
 
 /* Renvoie true si fin
@@ -228,15 +214,20 @@ void ReverseTraduction::displayChains()
 void ReverseTraduction::run()
 {
     emit startTimer();
+    FileManager * file = NULL;
+
     switch(_type)
     {
-    case reverseTranslateM: reverseTranslate(_param1.toStdString().c_str());break;
-    case loadFileAndTranslate: loadFicAndTranslate(_param1.toStdString().c_str());break;
+    case reverseTranslateM:
+        if(!_fileName.isEmpty())
+            file= new FileManager(_fileName);
+        reverseTranslate(_param1.toStdString().c_str());break;
+    case loadFileAndTranslate:
+        file= new FileManager(_param1,_fileName);
+        loadFicAndTranslate(file);break;
     }
 
-    if(_fileName.isEmpty())
-        parcours();
-    else
-        parcours(_fileName.toStdString().c_str());
+    parcours(file);
+
     emit stopTimer();
 }

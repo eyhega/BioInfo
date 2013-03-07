@@ -9,6 +9,7 @@
 #include <string.h>
 #include <QThread>
 #include <sstream>
+#include "filemanager.h"
 
 using namespace std;
 
@@ -40,9 +41,9 @@ class ReverseTraduction : public QThread
 		void loadReverseTrad();
 		void reverseTranslate(const char * aa);
 		void displayChains();
-        void parcours(const char *inFileName = NULL);
+        void parcours(FileManager * file = NULL);
 		bool incremente();
-        void loadFicAndTranslate(const char* inFileName);
+        void loadFicAndTranslate(FileManager * file);
         void run();
         void start(ReverseMethod_t type,const char * param1,const char * fileName= NULL);
 

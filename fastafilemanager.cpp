@@ -83,6 +83,7 @@ void FastaFileManager::writeChain(QString& inChain)
     if(!_outStream.is_open())
         _outStream.open(_fileName.toStdString().c_str(),ios::out|ios::trunc);
 
+    _outStream << "> " << QDateTime::currentDateTime().toString().toStdString() <<  endl;
 
     if (inChain.contains(reg)) //ACGT
     {
@@ -91,8 +92,6 @@ void FastaFileManager::writeChain(QString& inChain)
     }
     else //cas proteines
     {
-        _outStream << "> " << QDateTime::currentDateTime().toString().toStdString() <<  endl;
-
         ss.str(inChain.toStdString());
         ss >> tmp;
         while(tmp != "*")
