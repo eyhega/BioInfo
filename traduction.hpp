@@ -26,9 +26,9 @@ class Traduction : public QThread
 private:
 
 	map<string,string> _traducteur; //!<Dictionnaire contenant la correspondance entre un codon et l'AA correspondant.
-    callMethod_t _type; //!<Attribut permettant de définir le type de méthode à appeler par le thread appelant.
-	 QString _param1;	 //!<Paramètre des méthode à éxécuter.
-    QString _param2; //!< Paramètre des méthode à éxécuter.
+    callMethod_t _type; //!<Attribut permettant de définir le type de méthode �  appeler par le thread appelant.
+    QString _param1;	 //!<Paramètre des méthode �  éxécuter.
+    QString _param2; //!< Paramètre des méthode �  éxécuter.
     using QThread::start;
 
 public:
@@ -47,7 +47,7 @@ public:
 	 Traduit la chaine passée en paramètre suivant l'ORC passé en paramètre et sort le résultat sur la console.
 	 Une analyse de la chaine est faite afin de déterminer la proportion de la chaine codante.
 	 La sortie est possible sur un fichier passé en paramètre.
-	 \param inChaine Chaîne à traduire.
+	 \param inChaine Chaîne �  traduire.
 	 \param mode ORC pour lequel la chaîne doit être traduite.
 	 \param file Fichier de sortie (optionnel).
 	 */
@@ -56,18 +56,18 @@ public:
 	 \par
 	 Traduit la chaine passée en paramètre suivant tous les ORC et sort les résultats sur la console.
 	 La sortie est possible sur un fichier passé en paramètre.
-	 \param inChaine Chaîne à traduire.
+	 \param inChaine Chaîne �  traduire.
 	 \param file Fichier de sortie (optionnel).
 	 */
     inline void translate_all_ORC(const char *inChaine,FileManager * file = NULL);
 	/*!\brief L'ordre des caractères de la chaine passée en paramètre est inversé.
-	 \param s Chaine à inverser.
+	 \param s Chaine �  inverser.
 	 */
     void reverser(char s[]);
 	/*!\brief Vérifie si la chaine passée en paramètre peut être traduite sans problème apparant.
 	 \par
 	 Teste si la chaîne est terminée par le caractère '*'.
-	 \param s Chaine à tester.
+	 \param s Chaine �  tester.
 	 \return Vrai si la chaîne peut être traduite.
 	 */
     bool isChainFormated(const char * s);
@@ -78,8 +78,8 @@ public:
     void run();
 	/*!\brief Méthode permettant de lancer le thread.
 	 \param type Définit quelles méthodes seront exécutées.
-	 \param inParam1 Paramètre des méthode à éxécuter.
-	 \param inParam2 Paramètre des méthode à éxécuter (optionnel).
+	 \param inParam1 Paramètre des méthode �  éxécuter.
+	 \param inParam2 Paramètre des méthode �  éxécuter (optionnel).
 	 
 	 */
     void start(callMethod_t type,const char * inParam1,const char * inParam2= NULL);

@@ -157,3 +157,68 @@ void TabWidget::on_pushButton_reset_clicked()
     ui->lineEdit_3->clear();
     ui->lineEdit_4->clear();
 }
+
+void TabWidget::on_radioButton_clicked()
+{
+    ui->label_element->setText("Nombre d'acides nucléiques par chaine :");
+    ui->label_nb->setText("Nombre de chaine d'acide nucléiques :");
+}
+
+void TabWidget::on_radioButton_2_clicked()
+{
+    ui->label_element->setText("Nombre d'acides aminés par chaine :");
+    ui->label_nb->setText("Nombre de chaine d'acide aminés :");
+}
+
+void TabWidget::on_pushButton_7_clicked()
+{
+    ui->lineEdit_5->setText(callFileDialog("Fichier de sortie"));
+}
+
+void TabWidget::on_groupBox_display_clicked()
+{
+    ui->groupBox_outFile->setChecked(false);
+}
+
+
+void TabWidget::on_groupBox_outFile_clicked()
+{
+    ui->groupBox_display->setChecked(false);
+}
+
+void TabWidget::on_pushButton_gen_clicked()
+{
+    QString tmp;
+    int nbChain=ui->spinBox_nb->value(),nbElem=ui->spinBox_element->value();
+    ui->plainTextEdit_2->clear();
+    if(ui->groupBox_display->isChecked())
+    {
+        if(ui->radioButton->isChecked())//gen nucléotides
+        {
+            for(int i=0;i < nbChain ; ++i)
+            {
+                tmp.append(Generateur::genACGT(nbElem)).append("<BR/>");
+                ui->plainTextEdit_2->appendHtml(tmp);
+                tmp.clear();
+            }
+        }
+        else
+        {
+            for(int i=0;i < nbChain ; ++i)
+            {
+                tmp.append(Generateur::genPept(nbElem)).append("<BR/>");
+                ui->plainTextEdit_2->appendHtml(tmp);
+                tmp.clear();
+            }
+        }
+    }
+    else if(ui->groupBox_outFile->isChecked())
+    {
+        if(ui->radioButton->isChecked())//gen nucléotides
+            Generateur::genACGT(ui->lineEdit_5->text(),nbElem,nbChain);
+        else
+            Generateur::genPept(ui->lineEdit_5->text(),nbElem,nbChain);
+
+         openNotepad(ui->lineEdit_5->text());
+    }
+}

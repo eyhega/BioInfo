@@ -12,6 +12,7 @@
 
 #include <traduction.hpp>
 #include <ReverseTraduction.hpp>
+#include "Generateur.hpp"
 
 namespace Ui {
 class TabWidget;
@@ -41,6 +42,18 @@ private slots:
     void on_pushButton_6_clicked();
 
     void on_pushButton_reset_clicked();
+
+    void on_radioButton_clicked();
+
+    void on_radioButton_2_clicked();
+
+    void on_pushButton_7_clicked();
+
+    void on_groupBox_display_clicked();
+
+    void on_groupBox_outFile_clicked();
+
+    void on_pushButton_gen_clicked();
 
 public slots:
     void timerLaunched();
