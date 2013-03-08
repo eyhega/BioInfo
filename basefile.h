@@ -7,21 +7,30 @@
 
 using namespace std;
 
+//!\brief Classe permettant les échange de flux avec un fichier.
+
 class BaseFile
 {
 protected:
-    QString _fileName;
-    ifstream  _inStream;
-    ofstream  _outStream;
+    QString _fileName;//!<Chemin du fichier avec lequel se font les échanges de flux.
+    ifstream  _inStream;//!<Flux d'entrée.
+    ofstream  _outStream;//!<Flux de sortie.
 
 public:
     BaseFile(QString inFileName);
-    ~BaseFile();
+    virtual ~BaseFile();
     const QString& getFileName() {return _fileName;}
     void setFileName(const QString& inFileName) { _fileName=inFileName;}
 
-    //methods
+    //methodes virtuelles pures
+	
+	/*!\brief Lit une ligne du fichier
+	 \return La ligne du fichier.
+	 */
     virtual QString readChain()=0;
+	/*!\brief Ecrit une chaîne dans le fichier.
+	 \param inChain Chaîne �  écrire dans le fichier.
+	 */
     virtual void writeChain(QString& inChain)=0;
 };
 

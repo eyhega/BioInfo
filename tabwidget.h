@@ -17,6 +17,8 @@ namespace Ui {
 class TabWidget;
 }
 
+//!\brief Classe gérant l'interface.
+
 class TabWidget : public QTabWidget
 {
     Q_OBJECT

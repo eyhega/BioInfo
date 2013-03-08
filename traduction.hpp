@@ -17,7 +17,7 @@ typedef enum
     translate_files
 } callMethod_t;
 
-//!\brief Classe permettant la traduction d'une séquence ADN en séquence peptidique
+//!\brief Classe permettant la traduction d'une séquence ADN en séquence peptidique.
 
 class Traduction : public QThread
 {
@@ -26,9 +26,9 @@ class Traduction : public QThread
 private:
 
 	map<string,string> _traducteur; //!<Dictionnaire contenant la correspondance entre un codon et l'AA correspondant.
-    callMethod_t _type; //!<Paramètre permettant de définir le type de méthode à appeler par le thread appelant.
+    callMethod_t _type; //!<Attribut permettant de définir le type de méthode à appeler par le thread appelant.
 	 QString _param1;	 //!<Paramètre des méthode à éxécuter.
-    QString _param2; //!< Paramètre des méthode à éxécuter (optionnel).
+    QString _param2; //!< Paramètre des méthode à éxécuter.
     using QThread::start;
 
 public:
